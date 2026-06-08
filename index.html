@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letters for Asmi</title>
+    <!-- Elegant fonts from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;600&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-rose: #ffafbd;
+            --accent-glow: rgba(255, 175, 189, 0.3);
+            --bg-gradient: radial-gradient(circle at center, #1a1a2e 0%, #07070a 100%);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #f8f9fa;
+            --text-muted: #a0a0a0;
+            --transition-speed: 0.8s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-font-smoothing: antialiased;
+            transition: background var(--transition-speed) ease;
+        }
+
+        /* Typography Polish */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-rose);
+            text-shadow: 0 0 30px var(--accent-glow);
+            letter-spacing: -1px;
+            font-size: clamp(2rem, 6vw, 3rem);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 450px;
+            line-height: 1.5;
+        }
+
+        /* Magic Background Props */
+        #magic-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: 
+                twinkle var(--duration) infinite ease-in-out,
+                drift var(--drift-duration) infinite alternate ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; scale: 1; }
+            50% { opacity: 0.8; scale: 1.2; }
+        }
+
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(var(--drift-x), var(--drift-y)); }
+        }
+
+        .petal {
+            position: absolute;
+            background: var(--primary-rose);
+            border-radius: 150% 0 150% 50%;
+            opacity: 0;
+            filter: blur(0.5px);
+            animation: petal-float 20s infinite linear;
+        }
+
+        .bokeh {
+            position: absolute;
+            background: var(--primary-rose);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.08;
+            transition: background var(--transition-speed) ease, left var(--transition-speed) ease, top var(--transition-speed) ease;
+        }
+
+        @keyframes petal-float {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(110vh) translateX(150px) rotate(720deg); opacity: 0; }
+        }
+
+        /* App Layout Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            z-index: 10;
+            padding: 4rem 1rem;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        /* Sophisticated Oracle Card Design */
+        .card {
+            height: clamp(380px, 55vh, 460px);
+            width: 100%;
+            max-width: 340px;
+            perspective: 1500px;
+            margin-bottom: 2rem;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-inner { 
+            transform: rotateY(180deg); 
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.02);
+            transition: border var(--transition-speed) ease;
+        }
+
+        /* Card Front: Elegant Mystery State */
+        .card-front { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); 
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .card-front .oracle-eye {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px var(--primary-rose));
+            animation: float 4s infinite ease-in-out;
+            transition: all 0.5s ease;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Pulsing Glow while loading AI context */
+        .card.loading .card-front .oracle-eye {
+            animation: pulse 1.5s infinite ease-in-out;
+            filter: drop-shadow(0 0 25px var(--primary-rose));
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .card-front h3 { 
+            font-weight: 300; 
+            text-transform: uppercase; 
+            letter-spacing: 5px; 
+            font-size: 0.85rem; 
+            color: var(--primary-rose);
+            margin: 0;
+            text-align: center;
+        }
+
+        .card-front .prompt {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            letter-spacing: 1px;
+        }
+
+        /* Card Back: The Revealed Insight */
+        .card-back {
+            background: linear-gradient(135deg, rgba(12, 10, 36, 0.98), rgba(5, 5, 10, 0.99));
+            transform: rotateY(180deg);
+            padding: 2.5rem 2rem;
+            justify-content: space-between;
+        }
+        
+        .card.flipped .card-inner {
+            box-shadow: 0 0 50px var(--accent-glow);
+        }
+
+        .card-back .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-back .vibe-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-rose);
+            font-weight: 600;
+        }
+
+        .card-back .cosmic-number {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .card-back p { 
+            font-family: 'Caveat', cursive; 
+            font-size: 1.65rem; 
+            line-height: 1.4; 
+            color: var(--text-main);
+            margin: auto 0;
+        }
+
+        .card-back .quote-footer { 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 0.8rem;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* Core Interactive Button */
+        .oracle-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .oracle-btn:hover:not(:disabled) {
+            color: var(--primary-rose);
+            border-color: var(--primary-rose);
+            text-shadow: 0 0 15px var(--accent-glow);
+            box-shadow: 0 0 25px var(--accent-glow);
+            transform: translateY(-2px);
+            background: rgba(255, 175, 189, 0.05);
+        }
+
+        .oracle-btn:disabled {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Music Floating Control */
+        .music-control {
+            position: fixed; bottom: 2rem; right: 2rem;
+            width: 45px; height: 45px; border-radius: 50%;
+            border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+            color: var(--primary-rose); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .card { height: 400px; width: 90%; }
+            .card-back p { font-size: 1.4rem; }
+            .oracle-btn { padding: 0.8rem 2rem; font-size: 0.75rem; }
+            .music-control { bottom: 1.5rem; right: 1.5rem; width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="magic-container"></div>
+
+    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <button class="music-control" id="musicBtn" aria-label="Toggle Music"><span id="musicIcon">♪</span></button>
+
+    <div class="main-container">
+        <h1>Letters for Asmi</h1>
+        <p class="subtitle">A space for reminders of your worth, your strength, and the beautiful person you are.</p>
+
+        <div class="cards-grid">
+            <!-- Card 1: Motivational -->
+            <div class="card" id="card-motivation" onclick="generateCosmicCard('motivation', 'card-motivation')">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="oracle-eye">🪐</div>
+                        <h3>Motivation</h3>
+                        <div class="prompt">[ Tap to Receive ]</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="quote-header">
+                            <div class="vibe-tag">Motivation</div>
+                            <div class="cosmic-number">№ 111</div>
+                        </div>
+                        <p class="quote-text">Awaiting the spark...</p>
+                        <div class="quote-footer">Just for you</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Facts -->
+            <div class="card" id="card-fact" onclick="generateCosmicCard('fact', 'card-fact')">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="oracle-eye">🔭</div>
+                        <h3>Truth</h3>
+                        <div class="prompt">[ Tap to Open ]</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="quote-header">
+                            <div class="vibe-tag">Truth</div>
+                            <div class="cosmic-number">№ 444</div>
+                        </div>
+                        <p class="quote-text">Awaiting a truth...</p>
+                        <div class="quote-footer">Always remember this</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Character/Reflective -->
+            <div class="card" id="card-reflection" onclick="generateCosmicCard('reflection', 'card-reflection')">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="oracle-eye">🌙</div>
+                        <h3>Reflection</h3>
+                        <div class="prompt">[ Tap to Reflect ]</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="quote-header">
+                            <div class="vibe-tag">Reflection</div>
+                            <div class="cosmic-number">№ 888</div>
+                        </div>
+                        <p class="quote-text">Looking into the soul...</p>
+                        <div class="quote-footer">Your beautiful depth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="oracle-btn" id="drawBtn">SYNC ALL FREQUENCIES</button>
+    </div>
+
+    <script>
+        // --- PERSONAL DATA ENGINE ---
+        const SOUL_LIBRARY = {
+            motivation: [
+                "Asmi, you've survived 100% of your hardest days. You're doing so much better than you think.",
+                "I'm so proud of the way you're handling everything right now. Just keep being you.",
+                "Take a deep breath, Asmi. You don't have to figure it all out today. You're already enough.",
+                "The world is a much better place simply because you are in it. Never forget that.",
+                "Asmi, your kindness is your superpower. Don't let the world make you lose that spark.",
+                "You've got this. I believe in you even on the days you find it hard to believe in yourself."
+            ],
+            fact: [
+                "Fact: Your laugh is the most beautiful sound I know, Asmi. It changes the energy of the whole room.",
+                "A Truth: You have an incredible ability to make the people around you feel safe and seen.",
+                "Reminder: Your worth isn't tied to how much you get done. You are valuable just by existing.",
+                "Truth: You are one of the strongest people I know, even in the moments you feel most fragile.",
+                "Fact: You have a way of looking at the world that is rare and incredibly precious.",
+                "A Truth: You are loved more deeply than you can possibly imagine, especially on your bad days."
+            ],
+            reflection: [
+                "Asmi, I see the quiet strength you carry. It’s okay to rest; you don’t have to be the strong one today.",
+                "There is a depth in your heart that makes you unique. It’s what makes you so special to me.",
+                "Asmi, you have this beautiful way of healing others just by being present. Now, be kind to yourself.",
+                "When I look at you, I see a soul that has learned to bloom even in the most difficult seasons.",
+                "Your presence is a comfort that words can't really describe. You're a home for those who know you.",
+                "You possess a rare mix of vulnerability and courage. That’s what makes you so powerful, Asmi."
+            ]
+        };
+
+        const COSMIC_ICONS = {
+            motivation: ["✨", "🌟", "💫", "☀️", "⚡"],
+            fact: ["🪐", "🔭", "☄️", "🛰️", "🛸"],
+            reflection: ["🌙", "🔮", "🌌", "🌘", "🕯️"]
+        };
+
+        let activeGenerations = new Set();
+        let lastIndices = { motivation: -1, fact: -1, reflection: -1 };
+
+        async function generateCosmicCard(type, targetId, force = false) {
+            const card = document.getElementById(targetId);
+
+            // If card is already showing its answer and we are clicking it (not syncing), just hide it
+            if (!force && card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                return;
+            }
+
+            if (activeGenerations.has(targetId)) return;
+
+            activeGenerations.add(targetId);
+            const drawBtn = document.getElementById('drawBtn');
+            card.classList.add('loading');
+
+            // If card is showing its back, spin it back to the front during loading animation
+            if (card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                await new Promise(resolve => setTimeout(resolve, 400));
+            }
+
+            try {
+                // Simulated "Heartfelt Connection" for aesthetic feel (800ms)
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                const messageList = SOUL_LIBRARY[type];
+                
+                // Randomization algorithm that prevents immediate repeats
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * messageList.length);
+                } while (newIndex === lastIndices[type] && messageList.length > 1);
+                
+                lastIndices[type] = newIndex;
+                const responseText = messageList[newIndex];
+
+                // Randomizing Aesthetic Attributes
+                const tags = ["Strength", "Kindness", "Love", "Growth", "Soul", "Heart"];
+                const colors = ["#ffafbd", "#a1c4fd", "#b1f2ff", "#e2d1f9", "#fbc2eb", "#c3cfe2"];
+                const icons = COSMIC_ICONS[type];
+                const footers = ["You are so loved", "Rooted and growing", "Find your peace", "You are enough", "Trust your heart", "I'm always here for you"];
+
+                const randomTag = tags[Math.floor(Math.random() * tags.length)];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                const randomFooter = footers[Math.floor(Math.random() * footers.length)];
+                const randomNum = Math.floor(Math.random() * 899) + 100;
+
+                // Inject contents covertly onto the back card layer
+                card.querySelector('.vibe-tag').innerText = randomTag;
+                card.querySelector('.cosmic-number').innerText = `№ ${randomNum}`;
+                card.querySelector('.quote-text').innerText = `"${responseText}"`;
+                card.querySelector('.quote-footer').innerText = randomFooter;
+
+                // Setup the front card icon loop variation for next clicks
+                card.querySelector('.oracle-eye').innerText = randomIcon;
+
+                // Seamlessly manipulate CSS environment variables and bokeh coordinates
+                document.documentElement.style.setProperty('--primary-rose', randomColor);
+                document.documentElement.style.setProperty('--accent-glow', randomColor + '4d');
+                document.querySelectorAll('.bokeh').forEach(b => {
+                    b.style.left = Math.random() * 80 + 10 + '%';
+                    b.style.top = Math.random() * 80 + 10 + '%';
+                    b.style.background = randomColor;
+                });
+
+                // Spin to reveal the finished masterpiece
+                card.classList.remove('loading');
+                card.classList.add('flipped');
+                const typeLabels = { motivation: "Motivation", fact: "Truth", reflection: "Reflection" };
+                card.querySelector('h3').innerText = typeLabels[type];
+
+            } catch (error) {
+                console.error("Cosmic Error Caught:", error);
+                card.querySelector('.quote-text').innerText = '"Just a reminder that you are loved beyond measure."';
+                card.classList.remove('loading');
+                card.classList.add('flipped');
+            } finally {
+                activeGenerations.delete(targetId);
+                drawBtn.innerText = "SYNC ALL FREQUENCIES";
+            }
+        }
+
+        // --- BACKGROUND GRAPHICS CONTROLLER ---
+        function createMagic() {
+            const container = document.getElementById('magic-container');
+
+            for(let i=0; i<4; i++) {
+                const bokeh = document.createElement('div');
+                bokeh.className = 'bokeh';
+                const size = Math.random() * 250 + 250;
+                bokeh.style.width = size + 'px';
+                bokeh.style.height = size + 'px';
+                bokeh.style.left = Math.random() * 80 + 10 + '%';
+                bokeh.style.top = Math.random() * 80 + 10 + '%';
+                container.appendChild(bokeh);
+            }
+
+            for(let i=0; i<80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                star.style.setProperty('--drift-x', (Math.random() * 30 - 15) + 'px');
+                star.style.setProperty('--drift-y', (Math.random() * 30 - 15) + 'px');
+                star.style.setProperty('--drift-duration', (Math.random() * 10 + 15) + 's');
+                container.appendChild(star);
+            }
+
+            for(let i=0; i<12; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.width = (Math.random() * 8 + 5) + 'px';
+                petal.style.height = (Math.random() * 8 + 5) + 'px';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDelay = (Math.random() * -15) + 's';
+                container.appendChild(petal);
+            }
+        }
+
+        function syncAll() {
+            generateCosmicCard('motivation', 'card-motivation', true);
+            setTimeout(() => generateCosmicCard('fact', 'card-fact', true), 300);
+            setTimeout(() => generateCosmicCard('reflection', 'card-reflection', true), 600);
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            const icon = document.getElementById('musicIcon');
+            if (audio.paused) {
+                audio.play();
+                icon.innerText = '♫';
+                btn.style.boxShadow = "0 0 20px var(--primary-rose)";
+            } else {
+                audio.pause();
+                icon.innerText = '♪';
+                btn.style.boxShadow = "none";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createMagic();
+            document.getElementById('drawBtn').addEventListener('click', syncAll);
+            document.getElementById('musicBtn').addEventListener('click', toggleMusic);
+        });
+    </script>
+</body>
+</html>
